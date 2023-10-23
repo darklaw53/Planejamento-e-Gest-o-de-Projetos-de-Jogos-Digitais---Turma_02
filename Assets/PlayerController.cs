@@ -23,11 +23,13 @@ public class PlayerController : MonoBehaviour
 
     public bool jumping, doJump, doLSlap, doRSlap, doShove;
 
-    Coroutine jmp, lSlap, rSlap, shov;
+    public Coroutine jmp, lSlap, rSlap, shov;
 
     public bool swingingRHand, swingingLHand, shoving, dizzy;
 
     Quaternion rot;
+
+    public GameManager gm;
 
     private void Start()
     {
@@ -112,19 +114,21 @@ public class PlayerController : MonoBehaviour
         leftHand.gameObject.tag = "Untagged";
     }
 
-    private IEnumerator Jump()
+    public IEnumerator Jump()
     {
         yield return new WaitForSeconds(.8f);
         jumping = false;
+        rigBod.AddForce(-orientation.up * 150, ForceMode.Force);
     }
 
     private IEnumerator Dizzy()
     {
-        dizzy = true;
         bodyAnim.Play("Dizzy");
         yield return new WaitForSeconds(1f);
         bodyAnim.Play("Idle");
         dizzy = false;
+
+        rigBod.AddForce(-orientation.up * 150, ForceMode.Force);
     }
 
     private void FixedUpdate()
@@ -195,8 +199,10 @@ public class PlayerController : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if ((other.gameObject != rightHand.gameObject || other.gameObject != leftHand.gameObject) && other.gameObject.tag == "Hand")
+        if ((other.gameObject != rightHand.gameObject || other.gameObject != leftHand.gameObject) 
+            && other.gameObject.tag == "Hand" && !dizzy)
         {
+            dizzy = true;
             GetSlapped();
 
             if (oponent.shoving)
@@ -206,10 +212,19 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.gameObject.tag == "ArenaLimits")
+        {
+            MatchOver();
+        }
+    }
+
     void GetSlapped()
     {
         rigBod.velocity = Vector3.zero;
         StopAllCoroutines();
+        bodyAnim.Play("Idle");
         shoving = false;
         swingingLHand = false;
         swingingRHand = false;
@@ -228,5 +243,11 @@ public class PlayerController : MonoBehaviour
         rigBod.AddForce(moveDirection.normalized * moveSpeed * 4 * 10f, ForceMode.Force);
 
         jmp = StartCoroutine(Jump());
+    }
+
+    void MatchOver()
+    {
+        Time.timeScale = 0;
+        gm.MatchOver(this);
     }
 }
