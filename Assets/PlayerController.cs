@@ -19,9 +19,9 @@ public class PlayerController : MonoBehaviour
     public Renderer render;
 
     float startSpeed;
-    float horizontalInput, verticalInput;
+    public float horizontalInput, verticalInput;
 
-    bool jumping, doJump, doLSlap, doRSlap, doShove;
+    public bool jumping, doJump, doLSlap, doRSlap, doShove;
 
     Coroutine jmp, lSlap, rSlap, shov;
 
@@ -179,7 +179,7 @@ public class PlayerController : MonoBehaviour
             doShove = false;
         }
 
-        if (!isOponent && !jumping) PhysicsUpdates();
+        if (!jumping) PhysicsUpdates();
     }
 
     void PhysicsUpdates()
