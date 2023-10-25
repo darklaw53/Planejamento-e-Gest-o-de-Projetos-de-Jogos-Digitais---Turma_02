@@ -14,8 +14,8 @@ O jogador deve usar uma combinação de empurrões, tapas e desvios para fazer o
   W/S - se mover para mais perto e longe do oponente.
   A/D - arrodear o oponente.
   W/S/A/D + Espaço - saltar em uma direção.
-  Mouse1 - golpe.
-  Mouse2 - empurrão.
+  Mouse1 ou Mouse2 - golpe.
+  Mouse1 e Mouse2 - empurrão.
   
 Gênero:
 Jogo de luta/arte marcial.
@@ -50,4 +50,4 @@ Quais são os critérios de vitória e derrota do jogador?
 Se o jogador sair da arena, o jogador perde, se o oponente sair da arena, o jogador ganha.
 
 Monetização do jogo:
-Gratuito com opção de pay what you want no ichio.
+Gratuito com opção eventual de pay what you want no ichio quando audido próprio for adquirido.
