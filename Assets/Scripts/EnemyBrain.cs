@@ -31,15 +31,26 @@ public class EnemyBrain : MonoBehaviour
 
         reflexes = Mathf.RoundToInt((intelect + dexterity) / 2);
 
-        controllerScript.maxSpeed += dexterity * 2 - 5;
-        controllerScript.rotationSpeed += dexterity * 2 - 5;
-        controllerScript.moveSpeed += dexterity * 2 - 5;
+        controllerScript.maxSpeed += dexterity - 2;
+        controllerScript.rotationSpeed += dexterity - 2;
+        controllerScript.moveSpeed += dexterity - 2;
 
         targetMovePosition = ChooseTargetMove();
+
+        StartCoroutine(Hajime());
+    }
+
+    private IEnumerator Hajime()
+    {
+        var x = 3 - Mathf.RoundToInt((Persistant.GetInstance().challengeRating / 15) * 2);
+        yield return new WaitForSeconds(0);
+        controllerScript.start = true;
     }
 
     private void Update()
     {
+        if (!controllerScript.start) return;
+
         targetMovePosition = new Vector3(targetMovePosition.x, 3.5f, targetMovePosition.z);
         dist = Vector3.Distance(targetMovePosition,
             transform.position);
@@ -72,11 +83,11 @@ public class EnemyBrain : MonoBehaviour
         }
 
         if (Vector3.Distance (controllerScript.oponent.transform.position, 
-            transform.position) < 5 && readyToAttack)
+            transform.position) < 6 && readyToAttack)
         {
             readyToAttack = false;
 
-            if (controllerScript.oponent.dizzy)
+            if (controllerScript.oponent.dizzy || controllerScript.oponent.starNumber == 3)
             {
                 Shove();
             }

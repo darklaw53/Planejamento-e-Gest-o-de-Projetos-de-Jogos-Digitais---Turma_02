@@ -3245,7 +3245,8 @@ MonoBehaviour:
     rating.
 
 
-    Try slapping to stun and reposition.
+    The more slaps you land the harder you can shove (represented by
+    stars)
 
 
     Esc to return to menu.'
@@ -3275,7 +3276,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 21.55
+  m_fontSize: 21.2
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1

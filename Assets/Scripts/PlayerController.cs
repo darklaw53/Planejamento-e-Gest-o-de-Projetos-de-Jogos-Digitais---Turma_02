@@ -37,6 +37,11 @@ public class PlayerController : MonoBehaviour
     public AudioSource hadSourceL;
     public AudioSource hadSourceR;
 
+    public bool start;
+
+    public int starNumber;
+    public GameObject star1, star2, star3;
+
     private void Start()
     {
         startSpeed = moveSpeed;
@@ -132,7 +137,7 @@ public class PlayerController : MonoBehaviour
     private IEnumerator Dizzy()
     {
         bodyAnim.Play("Dizzy");
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(1.2f);
         bodyAnim.Play("Idle");
         dizzy = false;
 
@@ -198,7 +203,7 @@ public class PlayerController : MonoBehaviour
     {
         var moveDirection = orientation.forward * verticalInput + orientation.right * horizontalInput;
 
-        rigBod.AddForce(moveDirection.normalized * moveSpeed * 10f, ForceMode.Force);
+        rigBod.AddForce(moveDirection.normalized * moveSpeed * 9f, ForceMode.Force);
         if (rigBod.velocity.magnitude > maxSpeed && !jumping)
         {
             rigBod.velocity = rigBod.velocity.normalized * maxSpeed;
@@ -210,12 +215,41 @@ public class PlayerController : MonoBehaviour
         if ((other.gameObject != rightHand.gameObject || other.gameObject != leftHand.gameObject) 
             && other.gameObject.tag == "Hand" && !dizzy)
         {
+            start = true;
+
             dizzy = true;
             GetSlapped();
 
             if (oponent.shoving)
             {
                 KnockBack();
+                starNumber = 0;
+                star1.SetActive(false);
+                star2.SetActive(false);
+                star3.SetActive(false);
+
+                oponent.starNumber = 0;
+                oponent.star1.SetActive(false);
+                oponent.star2.SetActive(false);
+                oponent.star3.SetActive(false);
+            }
+            else
+            {
+                starNumber++;
+                if (starNumber > 3) starNumber = 3;
+
+                if (starNumber == 1)
+                {
+                    star1.SetActive(true);
+                }
+                else if (starNumber == 2)
+                {
+                    star2.SetActive(true);
+                }
+                else if (starNumber == 3)
+                {
+                    star3.SetActive(true);
+                }
             }
         }
     }
@@ -231,6 +265,7 @@ public class PlayerController : MonoBehaviour
     void GetSlapped()
     {
         if (jmp != null) StopCoroutine(jmp);
+        jumping = false;
 
         switch (Random.Range(0, 4))
         {
@@ -261,7 +296,6 @@ public class PlayerController : MonoBehaviour
         rightHand.Play("HandRIdle");
         leftHand.Play("HandRIdle");
 
-        dizzy = false;
         StartCoroutine(Dizzy());
     }
 
@@ -275,7 +309,7 @@ public class PlayerController : MonoBehaviour
         if (dizzy) knockBack = 6;
 
         rigBod.AddForce(orientation.up * 150, ForceMode.Force);
-        rigBod.AddForce(moveDirection.normalized * moveSpeed * knockBack * 10f, ForceMode.Force);
+        rigBod.AddForce(moveDirection.normalized * moveSpeed * knockBack * (5 * starNumber), ForceMode.Force);
 
         jmp = StartCoroutine(Jump());
     }

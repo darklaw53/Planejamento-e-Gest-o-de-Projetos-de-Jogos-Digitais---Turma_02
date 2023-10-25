@@ -10,8 +10,8 @@ public class HandDetector : MonoBehaviour
     {
         if (other.gameObject.tag == "Hand")
         {
-            anim.Play("HandRIdle");
-            gameObject.tag = "Untagged";
+            //anim.Play("HandRIdle");
+            //gameObject.tag = "Untagged";
         }
     }
 }
